@@ -9,9 +9,12 @@ import Foundation
 //     "firstName":"Amy","lastName":"Pond"
 // }
 
+
+print( "***** classes - a simple json web service example *****" )
+
+
 // swift representation of the user info as a dictionary
 let sampleUserInfo: Dictionary = ["firstName": "Amy", "LastName": "Pond"]
-
 
 /**
  Define a json web services class that performs a GET and returns a JSON dictionary.
@@ -259,7 +262,7 @@ userProfileService.getFullNameForUserId( "asdf" ) { (name, error) -> Void in
 }
 
 
-print( "\n***** Protocols Extensions *****" )
+print( "\n***** Protocol Extensions *****" )
 /**
  Create an extension that adds a Get() overload that includes
  a timeout parameter.
