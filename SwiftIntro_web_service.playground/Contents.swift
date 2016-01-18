@@ -1,20 +1,15 @@
 import Foundation
 
-// Target audience is experienced developers who are not familiar with swift.
-// Protocol Oriented Programming - this demo is just the tip of the iceberg
+/**
+ Part 2 of 2
 
-// Get mPerks user info response:
-//
-// {
-//     "firstName":"Amy","lastName":"Pond"
-// }
+ A JSON web service example that touches on some of the benefits
+ of Protocol Oriented Programming.
+*/
 
 
 print( "***** classes - a simple json web service example *****" )
 
-
-// swift representation of the user info as a dictionary
-let sampleUserInfo: Dictionary = ["firstName": "Amy", "LastName": "Pond"]
 
 /**
  Define a json web services class that performs a GET and returns a JSON dictionary.
@@ -50,6 +45,11 @@ class SimpleJsonService
 /**
  Define a class that would be used w/in the app to retrive user 
  profile information.
+ 
+ Sample JSON response for an mPerks user profile call:
+ {
+     "firstName":"Amy","lastName":"Pond"
+ }
 */
 class SimpleUserProfileService
 {
@@ -77,9 +77,11 @@ class SimpleUserProfileService
             }
             
             // the response is looking good, let's grab the data that 
-            // we're after.
+            // we're after. response is a dict that looks like this:
+            //   ["firstName": "Amy", "LastName": "Pond"]
             let firstName = response["firstName"] as? String
-            let lastName = response["lastName"] as? String
+            let lastName  = response["lastName"]  as? String
+            
             if firstName != nil && lastName != nil
             {
                 completion( name: (firstName!, lastName!), error: nil )
@@ -149,6 +151,8 @@ simpleUserProfileService.getFullNameForUserId(
 
 
 print( "\n***** Protocols and dependency injection *****" )
+// https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Protocols.html#//apple_ref/doc/uid/TP40014097-CH25-ID267
+
 /**
  Create a protocol for the json service and redifine the
  class to conform to the protocol.
