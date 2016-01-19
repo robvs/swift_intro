@@ -1,7 +1,7 @@
 import Foundation
 
 /**
- Part 2 of 2
+ Part 3 of 3
 
  A JSON web service example that touches on some of the benefits
  of Protocol Oriented Programming.
@@ -23,6 +23,8 @@ class SimpleJsonService
     {
         let request = NSMutableURLRequest( URL: url )
         
+        // simpleDataTaskWithRequest is a helper function used to simulate a
+        // web service call.
         simpleDataTaskWithRequest(request) { (response) -> Void in
             if let response = response
             {
@@ -46,7 +48,7 @@ class SimpleJsonService
  Define a class that would be used w/in the app to retrive user 
  profile information.
  
- Sample JSON response for an mPerks user profile call:
+ Sample JSON response for a user profile call:
  {
      "firstName":"Amy","lastName":"Pond"
  }
@@ -102,6 +104,7 @@ print( "***** Calling the user profile service *****" )
  This is how we'd retrieve user profile info from w/in the app.
 */
 let simpleUserProfileService = SimpleUserProfileService()
+
 simpleUserProfileService.getFullNameForUserId( "1234" ) { (name, error) -> Void in
     guard let name = name else {
         print( "There was an error: \(error)" )
@@ -113,7 +116,8 @@ simpleUserProfileService.getFullNameForUserId( "1234" ) { (name, error) -> Void 
 
 
 print( "\n-- clean up response closure --" )
-// clean up the response closure by defining a function who's
+
+// refactor the response closure by defining a function who's
 // signature matches the closure's signature.
 func handleUserProfileServiceResponse( name: (first: String, last: String)?,
                                        error: NSError? )
@@ -156,6 +160,8 @@ print( "\n***** Protocols and dependency injection *****" )
 /**
  Create a protocol for the json service and redifine the
  class to conform to the protocol.
+
+ A Protocol is pretty much the same as an Interface in C#.
  */
 protocol JsonServiceProtocol
 {
@@ -170,6 +176,7 @@ class JsonService: JsonServiceProtocol
     {
         let request = NSMutableURLRequest(URL: url)
         
+        // using the same helper function used to simulate a web service call.
         simpleDataTaskWithRequest(request) { (serviceResponse) -> Void in
             if let goodResponse = serviceResponse
             {
@@ -213,6 +220,7 @@ class UserProfileService
             
             let firstName = response["firstName"] as? String
             let lastName = response["lastName"] as? String
+            
             if firstName != nil && lastName != nil
             {
                 completion( name: (firstName!, lastName!), error: nil )
@@ -227,7 +235,7 @@ class UserProfileService
     }
 }
 
-// Now we can test the user profile service using a fake json 
+// Now we can test the user profile service using a fake json
 // service instance.
 class FakeJsonService: JsonServiceProtocol
 {
@@ -253,20 +261,18 @@ class FakeJsonService: JsonServiceProtocol
 print( "\n-- test UserProfileService using fake json service --" )
 var userProfileService = UserProfileService( jsonService: FakeJsonService() )
 
-userProfileService.getFullNameForUserId( "1234" ) { (name, error) -> Void in
-    handleUserProfileServiceResponse( name, error: error )
-}
+userProfileService.getFullNameForUserId( "1234",
+                                         completion: handleUserProfileServiceResponse )
 
-userProfileService.getFullNameForUserId( "4321" ) { (name, error) -> Void in
-    handleUserProfileServiceResponse( name, error: error )
-}
+userProfileService.getFullNameForUserId( "4321",
+    									 completion: handleUserProfileServiceResponse )
 
-userProfileService.getFullNameForUserId( "asdf" ) { (name, error) -> Void in
-    handleUserProfileServiceResponse( name, error: error )
-}
+userProfileService.getFullNameForUserId( "asdf",
+    									 completion: handleUserProfileServiceResponse )
 
 
 print( "\n***** Protocol Extensions *****" )
+
 /**
  Create an extension that adds a Get() overload that includes
  a timeout parameter.
@@ -339,7 +345,10 @@ extension UserProfileService
 
 // call the new "extended" function.
 var userProfileServiceExt = UserProfileService( jsonService: JsonService() )
-userProfileServiceExt.getFullNameForUserId( "1234", timeout: 1.0 ) { (name, error) -> Void in
-    handleUserProfileServiceResponse( name, error: error )
-}
 
+userProfileServiceExt.getFullNameForUserId( "1234",
+                                            timeout: 1.0,
+                                            completion: handleUserProfileServiceResponse )
+
+
+// End of part 3 of 3
