@@ -5,6 +5,8 @@ import UIKit
  This tutorial focuses more on some of the important concepts in swift than
  the syntax. It's easy enough to use reference materials for details on syntax.
 
+ This material can be found on GitHub at https://github.com/robvs/swift_intro
+
  Part 1 of 3
  A quick tour of basic Swift syntax and language features.
 */
@@ -12,6 +14,9 @@ import UIKit
 // For more complete details on any topic, see Apple's documentation:
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID309
 
+// This is a Swift playgound. It's an interactive coding environment that
+// evaluates each statement and displays results as updates are made,
+// without the need to create a project.
 
 print( "***** let and var *****" )
 
@@ -106,7 +111,7 @@ if let name = name
 }
 
 
-print( "\n***** guard and the Pyramid of Doom *****" )
+print( "\n***** optionals and the Pyramid of Doom *****" )
 /**
  Also see "When (not) to use guard" - http://radex.io/swift/guard/
 */
@@ -133,6 +138,8 @@ if let a = a, b = b, c = c
     print( "a + b + c = \(a + b + c)" )
 }
 
+
+print( "\n***** using guard to bail early *****" )
 
 // using guard to do early error checking in a function and avoid the
 // pyramid of doom
@@ -171,7 +178,7 @@ for i in 0...4
     print( outputStr )
 }
 
-// syntax for half-open range - does not include the final value
+// syntax for half-open range if you don't want to include the final value
 let simpleArray = ["zero", "one", "two"]
 for index in 0..<simpleArray.count
 {
@@ -213,7 +220,6 @@ print( greeting )
 
 
 print( "\n***** tuples *****" )
-
 
 // tuples group multiple values into a single compount value.
 // in some ways similar to annonymous classes in C#.

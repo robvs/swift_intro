@@ -35,9 +35,8 @@ getFullNameForUserId( "1234" ) { (firstName, lastName) -> Void in
     print( "Full name is \(firstName) \(lastName)" )
 }
 
-// i often find it less confusing to define the closure before calling
-// the function
-var fullNameHandler = { (firstName: String, lastName: String) -> Void in
+// it is often less confusing to define the closure before calling the function
+let fullNameHandler = { (firstName: String, lastName: String) -> Void in
     print( "Full name is \(firstName) \(lastName) [closure assigned to a constant]" )
 }
 
@@ -60,7 +59,7 @@ enum ClubStatus: Int
     case declined
     
     var label: String
-        {
+    	{
             switch self
             {
             case .notEnrolled:
@@ -71,7 +70,7 @@ enum ClubStatus: Int
             default:
                 return String( self.rawValue )
             }
-    }
+    	}
 }
 
 let status = ClubStatus.enrolled
@@ -132,9 +131,12 @@ var user = User( firstName: "Rose", lastName: "Tylor" )
 print( "User frist name is \(user.firstName)" )
 
 // Prefer struct over class when the primary purpose is to
-// encapsulate a few relatively simple data values. See Apple's 
-// docs for full explanation - "Choosing Between Classes and 
-// Structures" section https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/ClassesAndStructures.html
+// encapsulate a few relatively simple data values, otherwise
+// use a class. 
+//
+// See Apple's docs for full explanation - "Choosing Between
+// Classes and Structures" section
+// https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/ClassesAndStructures.html
 
 
 

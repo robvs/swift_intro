@@ -10,7 +10,6 @@ import Foundation
 
 print( "***** classes - a simple json web service example *****" )
 
-
 /**
  Define a json web services class that performs a GET and returns a JSON dictionary.
 */
