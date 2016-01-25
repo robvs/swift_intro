@@ -16,11 +16,12 @@ import UIKit
 print( "\n***** enumerations *****" )
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html#//apple_ref/doc/uid/TP40014097-CH12-ID145
 
-// raw value types can be numeric (int, float, etc.), character or string.
+// raw value types can be numeric, character or string.
 enum SimpleEnum: Int
 {
     case Value1, Value2, Value3
 }
+
 
 let simpleEnumValue = SimpleEnum.Value1
 print( "enum value \(simpleEnumValue), raw value \(simpleEnumValue.rawValue)" )
@@ -53,17 +54,18 @@ enum ClubStatus: Int
     {
         return self == .Enrolled ||
                self == .NewTermsOptional ||
-               self == .NewTermsOptional
+               self == .NewTermsRequired
     }
 }
+
 
 let status = ClubStatus.Enrolled
 print( "status raw value: \(status.rawValue), label: \(status.label)" )
 print( "active: \(status.isActive())" )
 
 
-// the cases in an enum are value types themselves. this makes
-// easy to define a union in an enum.
+// cases in enums are value types themselves and each one can be any type
+// that you want - similar to unions and variants in other languages.
 enum Coordinate
 {
     case Grid(Double, Double)
@@ -72,6 +74,7 @@ enum Coordinate
 
 let gridPoint = Coordinate.Grid(5.0, 5.0)
 let pointInSpace = Coordinate.Space(3.0, 2.0, 4.0)
+
 
 switch gridPoint
 {
@@ -92,29 +95,35 @@ print( "\n***** closures *****" )
 //
 // notice the syntax is very similar to defining a function.
 func getFullNameForUserId( userId: String,
-                           completion: (firstName: String, lastName: String) -> Void )
+                           completion: (first: String, last: String) -> Void )
 {
-    // executing the provided closure is exactly like calling a function
-    completion( firstName: "Amy", lastName: "Pond" )
+    // executing the completion closure is exactly like calling a function
+    completion( first: "Amy", last: "Pond" )
 }
+
 
 // if a closure is the last parameter of a function, it can be
 // written as a 'trailing closure' where it is written outside
 // of the function's closing parentheses.
 getFullNameForUserId( "1234" ) { (firstName, lastName) -> Void in
+    
     print( "Full name is \(firstName) \(lastName)" )
 }
 
+
 // it is often less confusing to define the closure before calling the function
 let fullNameHandler = { (firstName: String, lastName: String) -> Void in
+    
     print( "Full name is \(firstName) \(lastName) [closure assigned to a constant]" )
 }
 
 getFullNameForUserId( "1234", completion: fullNameHandler )
+
+
 print( "\n***** classes & structures *****" )
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/ClassesAndStructures.html#//apple_ref/doc/uid/TP40014097-CH13-ID82
 
-// difining and instantiating a class is very similar to other modern languages
+// defining and instantiating a class is very similar to other modern languages
 class Person
 {
     // properties
@@ -127,6 +136,8 @@ class Person
         self.firstName = firstName
         self.lastName = lastName
     }
+    
+    // instance methods go here
 }
 
 var person = Person( firstName: "Rose", lastName: "Tylor" )
@@ -150,13 +161,13 @@ struct User
     }
 }
 
+
 // structs have an automatically-generated memberwise initializer.
 var user = User( firstName: "Rose", lastName: "Tylor" )
 print( "User frist name is \(user.firstName)" )
 
-// Prefer struct over class when the primary purpose is to
-// encapsulate a few relatively simple data values, otherwise
-// use a class. 
+// Guidelines: Prefer struct over class when the primary purpose is to
+// encapsulate a few relatively simple data values, otherwise use a class.
 //
 // See Apple's docs for full explanation - "Choosing Between
 // Classes and Structures" section

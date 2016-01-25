@@ -31,6 +31,7 @@ circumference = diameter * pi
 diameter      = 10
 circumference = diameter * pi
 
+
 // notice there are no semicolons. they're allowed, but discouraged.
 // they exist so that you can put mutiple statements on a single line.
 
@@ -51,11 +52,11 @@ class Names
 let namesObj = Names()
 namesObj.name1 = "Barney"
 
+
 // constants and variable names can contain almost any character, 
 // including unicode. i can't recommend using symblols like this
 // in your code, but it's there if you want it.
 let 🐶🐮 = "dogcow"
-print( "\(🐶🐮) says, \"moof\"")
 
 
 // type conversions must be explicit
@@ -90,7 +91,7 @@ print( greeting )
 
 print( "\n***** tuples *****" )
 
-// tuples group multiple values into a single compount value.
+// tuples group multiple values into a single compound value.
 // in some ways similar to annonymous classes in C#.
 let firstAndLastName: (String, String) = ("Rose", "Tyler")
 print( firstAndLastName.0 )
@@ -98,11 +99,12 @@ print( firstAndLastName.1 )
 
 // there may be some limited use cases where referencing values
 // in a tuple by index is warranted, but most of the time you'll
-// want to use a named tuple.
+// want to use a named tuple where each value in the has a 
+// corresponding name.
 
-
-// named touples, where each value in the tuple has a corresponding name.
-func fullNameForUserId( userId: String ) -> (first: String, middle: String, last: String)
+func fullNameForUserId( userId: String ) -> (first: String,
+                                             middle: String,
+                                             last: String)
 {
     return (first: "Amy", middle: "Jessica", last: "Pond")
 //    return ("Amy", "Jessica", "Pond")
@@ -119,9 +121,9 @@ print( "\n***** for Loops and Ranges *****" )
 // loop on a range of values
 for i in 0...4
 {
-    let outputStr = "i is \(i)"
-    print( outputStr )
+    print( "i is \(i)" )
 }
+
 
 // syntax for half-open range if you don't want to include the final value
 let simpleArray = ["zero", "one", "two"]
@@ -130,7 +132,8 @@ for index in 0..<simpleArray.count
     print( "simpleArray item at index \(index): \(simpleArray[index])" )
 }
 
-// for time where you want to simply iterate over the values in a collection,
+
+// for times where you want to simply iterate over the values in a collection,
 // as with other modern languages, Swift can do that too.
 let teamMemberNames = ["matt", "mitch", "kraig", "Jim"]
 for name in teamMemberNames
@@ -143,11 +146,13 @@ print( "\n***** Optionals *****" )
 
 // optional values (aka nullable)
 // Unless explicitly declared as optional, values can not be set to null.
+
+// By being deliberate about declaring a value as optional, Swift is able
+// to catch many nil pointer errors at compile time instead of run time.
+
 //var badName: String = nil
 var name: String? = nil
 
-// By being  deliberate about declaring a value as optional, Swift is able
-// to catch many nil pointer errors at compile time instead of run time.
 name = "Amy Pond"
 
 if name != nil
@@ -156,8 +161,9 @@ if name != nil
     print( "Hello \(name!)" )
 }
 
+
 // a more convenient way to unwrap is with "optional binding".
-// this is preffered over forced unwrapping.
+// which is much preffered over forced unwrapping.
 if let unwrappedName = name
 {
     print( "Hello \(unwrappedName)" )
@@ -175,10 +181,7 @@ if let name = name
 }
 
 
-print( "\n***** optionals and the Pyramid of Doom *****" )
-/**
- Also see "When (not) to use guard" - http://radex.io/swift/guard/
-*/
+print( "\n***** the Pyramid of Doom *****" )
 
 // unwrapping a group of obtional values
 // (notice that basice types can be declared as optional)
@@ -197,7 +200,8 @@ if let a = a
     }
 }
 
-// this can be rewritten using a shorthand syntax
+
+// this can be rewritten using a shorthand syntax, which looks much better.
 if let a = a, b = b, c = c
 {
     print( "a + b + c = \(a + b + c)" )
@@ -205,10 +209,13 @@ if let a = a, b = b, c = c
 
 
 print( "\n***** using guard to bail early *****" )
+/**
+Also see "When (not) to use guard" - http://radex.io/swift/guard/
+*/
 
-// using guard to do early error checking in a function and avoid the
-// pyramid of doom
-func addThreeOptionalValues( x: Int?, y: Int?, z: Int? ) -> Void
+// guards can be handy in functions with optional parameters and you want
+// do ealy error checking.
+func addTwoOptionalValues( x: Int?, y: Int? ) -> Void
 {
     guard let x = x else {
         print( "An 'x' value is required" )
@@ -218,20 +225,17 @@ func addThreeOptionalValues( x: Int?, y: Int?, z: Int? ) -> Void
         print( "A 'y' value is required" )
         return
     }
-    guard let z = z else {
-        print( "A 'z' value is required" )
-        return
-    }
     
-    // at this point, x, y and z are unwrapped and we know that all have 
+    // at this point, x and y are unwrapped and we know that all have
     // valid values
     
-    print( "x + y + z = \(x + y + z)" )
+    print( "x + y = \(x + y)" )
 }
 
+
 // test it...
-addThreeOptionalValues( a, y: b, z: c )
-addThreeOptionalValues( a, y: nil, z: c )
+addTwoOptionalValues( a, y: b )
+addTwoOptionalValues( a, y: nil )
 
 
 print( "\n***** switch *****" )
@@ -245,10 +249,13 @@ switch phoneNumber
 {
 case "616-555-1234":
     print( "Marge's number" )
+    
 case "616-555-4321":
     print( "Sandy's number" )
+    
 case let localNumber where localNumber.hasPrefix("616"):
     print( "\(localNumber) is an unknown local number" )
+    
 default:
     print( "\(phoneNumber) is out of the area" )
 }
