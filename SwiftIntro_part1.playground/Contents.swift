@@ -2,7 +2,7 @@ import UIKit
 
 /*******************************************************************************
  Target audience is experienced developers who are not familiar with swift.
- This tutorial focuses more on some of the important concepts in swift than
+ This tutorial focuses more on some of the intersting features in swift than
  the syntax. It's easy enough to use reference materials for details on syntax.
 
  This material can be found on GitHub at https://github.com/robvs/swift_intro
@@ -14,15 +14,19 @@ import UIKit
 // For more complete details on any topic, see Apple's documentation:
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID309
 
+
 // This is a Swift playgound. It's an interactive coding environment that
 // evaluates each statement and displays results as updates are made,
 // without the need to create a project.
+//
+// The pane to the right shows results in-line, and the pane on the bottom
+// is a debug area.
 
 
 print( "***** let and var *****" )
 
 // declaring constants and variables
-// use let by default, use var only when you expect the value to change.
+// let is preferred unless you expect to change its value.
 let pi:            Double = 3.14159
 var diameter:      Double = 5
 var circumference: Double
@@ -37,26 +41,30 @@ circumference = diameter * pi
 
 
 // with let, struct types are immutable but class instances are not.
-// note that arrays and dictionaries are struct types.
-let names:        [String] = ["Fred", "Wilma"]
+// arrays and dictionaries are struct types.
 var mutableNames: [String] = ["Fred", "Wilma"]
+let names:        [String] = ["Fred", "Wilma"]
 
 mutableNames[0] = "Barney"
 //names[0]      = "Barney"
 
+
 class Names
 {
-    var name1 = "Fred"
-    var name2 = "Wilma"
+    var name1:String = "Fred"
+    var name2:String = "Wilma"
 }
-let namesObj = Names()
+
+let namesObj: Names = Names()
 namesObj.name1 = "Barney"
 
 
-// constants and variable names can contain almost any character, 
+// constants and variable names can contain almost any character,
 // including unicode. i can't recommend using symblols like this
 // in your code, but it's there if you want it.
-let 🐶🐮 = "dogcow"
+let 🐶: String   = "dog"
+let 🐮: String   = "cow"
+let 🐶🐮: String = 🐶 + 🐮
 
 
 // type conversions must be explicit
@@ -77,7 +85,7 @@ print( "A circle w/dia of \(diameter) has a circ of \(circumference)" )
 
 print( "\n***** functions *****" )
 
-// parameters must be named. return type syntax is a little odd.
+// parameters must be named. return type syntax is a bit different.
 func greetingForName( firstName: String, lastName: String ) -> String
 {
     return "Hello \(firstName) \(lastName)"
@@ -97,10 +105,9 @@ let firstAndLastName: (String, String) = ("Rose", "Tyler")
 print( firstAndLastName.0 )
 print( firstAndLastName.1 )
 
-// there may be some limited use cases where referencing values
-// in a tuple by index is warranted, but most of the time you'll
-// want to use a named tuple where each value in the has a 
-// corresponding name.
+// there may be some limited use cases where referencing values in
+// a tuple by index is warranted, but most of the time you'll want
+// to use a named tuple where each value has a corresponding name.
 
 func fullNameForUserId( userId: String ) -> (first: String,
                                              middle: String,
@@ -294,4 +301,3 @@ default:
 
 
 // End of part 1 of 3
-

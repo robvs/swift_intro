@@ -72,8 +72,8 @@ enum Coordinate
     case Space(Double, Double, Double)
 }
 
-let gridPoint = Coordinate.Grid(5.0, 5.0)
-let pointInSpace = Coordinate.Space(3.0, 2.0, 4.0)
+let gridPoint: Coordinate = Coordinate.Grid(5.0, 5.0)
+let pointInSpace: Coordinate = Coordinate.Space(3.0, 2.0, 4.0)
 
 
 switch gridPoint
@@ -174,5 +174,6 @@ print( "User frist name is \(user.firstName)" )
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/ClassesAndStructures.html
 
 
+// This material can be found on GitHub at https://github.com/robvs/swift_intro
 
 // End of part 2 of 3
