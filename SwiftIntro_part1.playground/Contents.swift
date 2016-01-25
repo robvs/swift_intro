@@ -18,6 +18,7 @@ import UIKit
 // evaluates each statement and displays results as updates are made,
 // without the need to create a project.
 
+
 print( "***** let and var *****" )
 
 // declaring constants and variables
@@ -30,7 +31,8 @@ circumference = diameter * pi
 diameter      = 10
 circumference = diameter * pi
 
-// notice there are no semicolons. they are allowed, but discouraged.
+// notice there are no semicolons. they're allowed, but discouraged.
+// they exist so that you can put mutiple statements on a single line.
 
 
 // with let, struct types are immutable but class instances are not.
@@ -49,6 +51,12 @@ class Names
 let namesObj = Names()
 namesObj.name1 = "Barney"
 
+// constants and variable names can contain almost any character, 
+// including unicode. i can't recommend using symblols like this
+// in your code, but it's there if you want it.
+let 🐶🐮 = "dogcow"
+print( "\(🐶🐮) says, \"moof\"")
+
 
 // type conversions must be explicit
 let intValue:       Int    = 10
@@ -62,38 +70,94 @@ let pie = "apple pie"
 let pi_ = 3.14159
 
 
-// trying to use a name before it is initialized is a compiler error
-let something: Double
-let asdf = 2
-if asdf == 1
-{
-    something = 1.0
-}
-else if asdf == 2
-{
-    something = 2.0
-}
-//let somethingPlusOne = something + 1.0
-
-
 // string formatting - use \()
 print( "A circle w/dia of \(diameter) has a circ of \(circumference)" )
+
+
+print( "\n***** functions *****" )
+
+// parameters must be named. return type syntax is a little odd.
+func greetingForName( firstName: String, lastName: String ) -> String
+{
+    return "Hello \(firstName) \(lastName)"
+}
+
+// when calling a function, the first param is not named, but all remaining
+// params include the name
+let greeting: String = greetingForName( "Amy", lastName: "Pond" )
+print( greeting )
+
+
+print( "\n***** tuples *****" )
+
+// tuples group multiple values into a single compount value.
+// in some ways similar to annonymous classes in C#.
+let firstAndLastName: (String, String) = ("Rose", "Tyler")
+print( firstAndLastName.0 )
+print( firstAndLastName.1 )
+
+// there may be some limited use cases where referencing values
+// in a tuple by index is warranted, but most of the time you'll
+// want to use a named tuple.
+
+
+// named touples, where each value in the tuple has a corresponding name.
+func fullNameForUserId( userId: String ) -> (first: String, middle: String, last: String)
+{
+    return (first: "Amy", middle: "Jessica", last: "Pond")
+//    return ("Amy", "Jessica", "Pond")
+}
+
+let fullName = fullNameForUserId( "asdf" )
+fullName.first
+fullName.0
+print( fullName )
+
+
+print( "\n***** for Loops and Ranges *****" )
+
+// loop on a range of values
+for i in 0...4
+{
+    let outputStr = "i is \(i)"
+    print( outputStr )
+}
+
+// syntax for half-open range if you don't want to include the final value
+let simpleArray = ["zero", "one", "two"]
+for index in 0..<simpleArray.count
+{
+    print( "simpleArray item at index \(index): \(simpleArray[index])" )
+}
+
+// for time where you want to simply iterate over the values in a collection,
+// as with other modern languages, Swift can do that too.
+let teamMemberNames = ["matt", "mitch", "kraig", "Jim"]
+for name in teamMemberNames
+{
+    print( "Team member: \(name)" )
+}
 
 
 print( "\n***** Optionals *****" )
 
 // optional values (aka nullable)
-// By being  deliberate about declaring a value as optional, Swift is able
-// to catch many nil pointer errors at compile time instead of run time.
+// Unless explicitly declared as optional, values can not be set to null.
 //var badName: String = nil
 var name: String? = nil
+
+// By being  deliberate about declaring a value as optional, Swift is able
+// to catch many nil pointer errors at compile time instead of run time.
 name = "Amy Pond"
 
 if name != nil
 {
+    // optionals must be "unwrapped" before they can be used.
     print( "Hello \(name!)" )
 }
 
+// a more convenient way to unwrap is with "optional binding".
+// this is preffered over forced unwrapping.
 if let unwrappedName = name
 {
     print( "Hello \(unwrappedName)" )
@@ -117,6 +181,7 @@ print( "\n***** optionals and the Pyramid of Doom *****" )
 */
 
 // unwrapping a group of obtional values
+// (notice that basice types can be declared as optional)
 let a: Int? = 1
 let b: Int? = 2
 let c: Int? = 3
@@ -169,29 +234,13 @@ addThreeOptionalValues( a, y: b, z: c )
 addThreeOptionalValues( a, y: nil, z: c )
 
 
-print( "\n***** for Loops and Ranges *****" )
-
-// loop on a range of values
-for i in 0...4
-{
-    let outputStr = "i is \(i)"
-    print( outputStr )
-}
-
-// syntax for half-open range if you don't want to include the final value
-let simpleArray = ["zero", "one", "two"]
-for index in 0..<simpleArray.count
-{
-    print( "simpleArray item at index \(index): \(simpleArray[index])" )
-}
-
-
 print( "\n***** switch *****" )
 
 // no need for break
 // can match on strings & logic statements
 // switch statements must be exhaustive
 let phoneNumber = "616-555-1212"
+
 switch phoneNumber
 {
 case "616-555-1234":
@@ -205,33 +254,36 @@ default:
 }
 
 
-print( "\n***** functions *****" )
+// since case statements don't automatically fall through, you
+// can match multiple values by separating them with a comma.
+var someNumber = 1
 
-// parameters must be named. return type syntax is a little odd.
-func greetingForName( firstName: String, lastName: String ) -> String
+switch someNumber
 {
-    return "Hello \(firstName) \(lastName)"
+case 1, 2, 3:
+    print( "someNumber is 1, 2 or 3" )
+case 4, 5:
+    print( "someNumber is 4 or 5" )
+default:
+    print( "this is not the number you're looking for" )
 }
 
-// when calling a function, the first param is not named, but all remaining
-// params include the name
-let greeting: String = greetingForName( "Amy", lastName: "Pond" )
-print( greeting )
 
+// values in a switch can also match on intervals.
+someNumber = 42
 
-print( "\n***** tuples *****" )
-
-// tuples group multiple values into a single compount value.
-// in some ways similar to annonymous classes in C#.
-func fullNameForUserId( userId: String ) -> (first: String, last: String)
+switch someNumber
 {
-    return ("Amy", "Pond")
+case 0:
+    print( "zero" )
+case 1..<25:
+    print( "1 to 24" )
+case 25..<50:
+    print( "25 to 49" )
+default:
+    print( "50 or more" )
 }
 
-let fullName = fullNameForUserId( "asdf" )
-fullName.first
-fullName.0
-print( fullName )
 
 
 // End of part 1 of 3

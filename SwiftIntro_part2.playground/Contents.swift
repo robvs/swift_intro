@@ -13,6 +13,76 @@ import UIKit
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID309
 
 
+print( "\n***** enumerations *****" )
+// https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html#//apple_ref/doc/uid/TP40014097-CH12-ID145
+
+// raw value types can be numeric (int, float, etc.), character or string.
+enum SimpleEnum: Int
+{
+    case Value1, Value2, Value3
+}
+
+let simpleEnumValue = SimpleEnum.Value1
+print( "enum value \(simpleEnumValue), raw value \(simpleEnumValue.rawValue)" )
+
+
+// enums include support for computed properties and instance methods.
+enum ClubStatus: Int
+{
+    case NotEnrolled = 1
+    case Enrolled = 2
+    case NewTermsOptional = 3
+    case NewTermsRequired = 4
+    case Inactive = 5
+    case Declined = 6
+    
+    var label: String {
+        switch self
+        {
+        case .NotEnrolled:
+            return "Not Enrolled"
+        case .Enrolled:
+            return "Enrolled"
+            // etc.
+        default:
+            return String( self.rawValue )
+        }
+    }
+    
+    func isActive() -> Bool
+    {
+        return self == .Enrolled ||
+               self == .NewTermsOptional ||
+               self == .NewTermsOptional
+    }
+}
+
+let status = ClubStatus.Enrolled
+print( "status raw value: \(status.rawValue), label: \(status.label)" )
+print( "active: \(status.isActive())" )
+
+
+// the cases in an enum are value types themselves. this makes
+// easy to define a union in an enum.
+enum Coordinate
+{
+    case Grid(Double, Double)
+    case Space(Double, Double, Double)
+}
+
+let gridPoint = Coordinate.Grid(5.0, 5.0)
+let pointInSpace = Coordinate.Space(3.0, 2.0, 4.0)
+
+switch gridPoint
+{
+case .Grid( let x, let y ):
+    print( "2D coordinate: \(x), \(y)" )
+
+case .Space( let x, let y, let z ):
+    print( "3D coordinate: \(x), \(y), \(z)" )
+}
+
+
 print( "\n***** closures *****" )
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Closures.html#//apple_ref/doc/uid/TP40014097-CH11-ID94
 
@@ -41,52 +111,6 @@ let fullNameHandler = { (firstName: String, lastName: String) -> Void in
 }
 
 getFullNameForUserId( "1234", completion: fullNameHandler )
-
-
-print( "\n***** enumerations *****" )
-// https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html#//apple_ref/doc/uid/TP40014097-CH12-ID145
-
-
-// raw value types can be numeric (int, float, etc.), character or string.
-// enums include support for computed properties and instance methods.
-enum ClubStatus: Int
-{
-    case notEnrolled = 1
-    case enrolled
-    case newTermsOptional
-    case newTermsRequired
-    case inactive
-    case declined
-    
-    var label: String
-    	{
-            switch self
-            {
-            case .notEnrolled:
-                return "Not Enrolled"
-            case .enrolled:
-                return "Enrolled"
-                // etc.
-            default:
-                return String( self.rawValue )
-            }
-    	}
-}
-
-let status = ClubStatus.enrolled
-print( "status raw value: \(status.rawValue), label: \(status.label)" )
-
-
-enum ClubStatusAsString: String
-{
-    case notEnrolled = "Not Enrolled"
-    case enrolled = "Enrolled"
-}
-
-let strStatus = ClubStatusAsString.enrolled
-print( strStatus.rawValue )
-
-
 print( "\n***** classes & structures *****" )
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/ClassesAndStructures.html#//apple_ref/doc/uid/TP40014097-CH13-ID82
 
