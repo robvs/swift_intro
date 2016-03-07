@@ -1,11 +1,20 @@
 import UIKit
 
 /*******************************************************************************
- Target audience is experienced developers who are not familiar with swift.
- This tutorial focuses more on some of the intersting features in swift than
- the syntax. It's easy enough to use reference materials for details on syntax.
+ This presentation is an introduction to Swift that focuses on some of Swift's
+ more interesting features (i.e. closures, protocols, and cool things you can
+ do with switch statements and enumerations), while only briefly touching on 
+ its basic syntax (it's easy enough to use reference materials for details on 
+ basic syntax).
 
- This material can be found on GitHub at https://github.com/robvs/swift_intro
+ The target audience is experienced developers who are not familiar with swift.
+
+ This presentation can be found on GitHub at https://github.com/robvs/swift_intro
+
+ When presenting this material, it is recommended to comment-out the entire
+ file, then uncomment short blocks in turn as the code is discussed. Also
+ display the Debug area so that the audience can view results that aren't shown
+ in the pane on the right.
 
  Part 1 of 3
  A quick tour of basic Swift syntax and language features.
