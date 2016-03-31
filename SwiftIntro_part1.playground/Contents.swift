@@ -1,20 +1,15 @@
+import AVFoundation
 import UIKit
 
 /*******************************************************************************
  This presentation is an introduction to Swift that focuses on some of Swift's
- more interesting features (i.e. closures, protocols, and cool things you can
- do with switch statements and enumerations), while only briefly touching on 
- its basic syntax (it's easy enough to use reference materials for details on 
- basic syntax).
+ more interesting features (i.e. cool things you can do with enumerations and
+ switch statements, etc.), while only briefly touching on its basic syntax 
+ (it's easy enough to use reference materials for details on basic syntax).
 
  The target audience is experienced developers who are not familiar with swift.
 
  This presentation can be found on GitHub at https://github.com/robvs/swift_intro
-
- When presenting this material, it is recommended to comment-out the entire
- file, then uncomment short blocks in turn as the code is discussed. Also
- display the Debug area so that the audience can view results that aren't shown
- in the pane on the right.
 
  Part 1 of 3
  A quick tour of basic Swift syntax and language features.
@@ -24,6 +19,8 @@ import UIKit
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID309
 
 
+print( "***** swift playgrounds *****" )
+
 // This is a Swift playgound. It's an interactive coding environment that
 // evaluates each statement and displays results as updates are made,
 // without the need to create a project.
@@ -32,7 +29,7 @@ import UIKit
 // is a debug area.
 
 
-print( "***** let and var *****" )
+print( "\n***** let and var *****" )
 
 // declaring constants and variables
 // let is preferred unless you expect to change its value.
@@ -90,6 +87,7 @@ let pi_ = 3.14159
 
 // string formatting - use \()
 print( "A circle w/dia of \(diameter) has a circ of \(circumference)" )
+print( "\(🐶🐮) says 'moof'")
 
 
 print( "\n***** functions *****" )
@@ -122,6 +120,7 @@ func fullNameForUserId( userId: String ) -> (first: String,
                                              middle: String,
                                              last: String)
 {
+    // names are optional
     return (first: "Amy", middle: "Jessica", last: "Pond")
 //    return ("Amy", "Jessica", "Pond")
 }
@@ -140,7 +139,6 @@ for i in 0...4
     print( "i is \(i)" )
 }
 
-
 // syntax for half-open range if you don't want to include the final value
 let simpleArray = ["zero", "one", "two"]
 for index in 0..<simpleArray.count
@@ -156,6 +154,18 @@ for name in teamMemberNames
 {
     print( "Team member: \(name)" )
 }
+
+
+// c-style for loop
+for ( var i = 0; i < 10; i++ )
+{
+    print( i )
+}
+
+// i++ and ++i is deprecated
+// this for loop syntax is deprecated as of Swift 2.2
+// here is the proposal that inspired this:
+//   https://github.com/apple/swift-evolution/blob/master/proposals/0007-remove-c-style-for-loops.md
 
 
 print( "\n***** Optionals *****" )
@@ -257,56 +267,55 @@ addTwoOptionalValues( a, y: nil )
 print( "\n***** switch *****" )
 
 // no need for break
-// can match on strings & logic statements
 // switch statements must be exhaustive
-let phoneNumber = "616-555-1212"
-
-switch phoneNumber
+var preset: String = AVAssetExportPreset1920x1080
+var height: Int
+switch preset
 {
-case "616-555-1234":
-    print( "Marge's number" )
-    
-case "616-555-4321":
-    print( "Sandy's number" )
-    
-case let localNumber where localNumber.hasPrefix("616"):
-    print( "\(localNumber) is an unknown local number" )
-    
+case AVAssetExportPreset1920x1080:
+    height = 1080
+case AVAssetExportPreset1280x720:
+    height = 720
+case AVAssetExportPreset640x480:
+    height = 480
 default:
-    print( "\(phoneNumber) is out of the area" )
+    height = 0
 }
+
+print( "preset height: \(height)" )
 
 
 // since case statements don't automatically fall through, you
 // can match multiple values by separating them with a comma.
-var someNumber = 1
-
-switch someNumber
+switch preset
 {
-case 1, 2, 3:
-    print( "someNumber is 1, 2 or 3" )
-case 4, 5:
-    print( "someNumber is 4 or 5" )
+case AVAssetExportPreset1920x1080, AVAssetExportPresetHighestQuality:
+    height = 1080
+case AVAssetExportPreset1280x720, AVAssetExportPresetMediumQuality:
+    height = 720
+case AVAssetExportPreset640x480, AVAssetExportPresetLowQuality:
+    height = 480
 default:
-    print( "this is not the number you're looking for" )
+    height = 0
 }
 
+print( "preset height: \(height)" )
 
-// values in a switch can also match on intervals.
-someNumber = 42
 
-switch someNumber
+// values in a switch can also match on logic statements intervals.
+switch height
 {
-case 0:
-    print( "zero" )
-case 1..<25:
-    print( "1 to 24" )
-case 25..<50:
-    print( "25 to 49" )
+case let h where h >= 1080:
+    preset = AVAssetExportPreset1920x1080
+case 720..<1080:
+    preset = AVAssetExportPreset1280x720
+case 480..<720:
+    preset = AVAssetExportPreset640x480
 default:
-    print( "50 or more" )
+    preset = AVAssetExportPresetLowQuality
 }
 
+print( "preset: \(preset)" )
 
 
 // End of part 1 of 3
