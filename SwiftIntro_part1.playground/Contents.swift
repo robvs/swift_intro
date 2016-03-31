@@ -41,7 +41,6 @@ circumference = diameter * pi
 diameter      = 10
 circumference = diameter * pi
 
-
 // notice there are no semicolons. they're allowed, but discouraged.
 // they exist so that you can put mutiple statements on a single line.
 
@@ -112,9 +111,11 @@ let firstAndLastName: (String, String) = ("Rose", "Tyler")
 print( firstAndLastName.0 )
 print( firstAndLastName.1 )
 
+
 // there may be some limited use cases where referencing values in
 // a tuple by index is warranted, but most of the time you'll want
 // to use a named tuple where each value has a corresponding name.
+
 
 func fullNameForUserId( userId: String ) -> (first: String,
                                              middle: String,
@@ -139,7 +140,8 @@ for i in 0...4
     print( "i is \(i)" )
 }
 
-// syntax for half-open range if you don't want to include the final value
+// there's also syntax for half-open range if you don't want to include the 
+// final value
 let simpleArray = ["zero", "one", "two"]
 for index in 0..<simpleArray.count
 {
@@ -147,8 +149,8 @@ for index in 0..<simpleArray.count
 }
 
 
-// for times where you want to simply iterate over the values in a collection,
-// as with other modern languages, Swift can do that too.
+// as with most modern languages, swift allows you to iterate over the 
+// values in a collection.
 let teamMemberNames = ["matt", "mitch", "kraig", "Jim"]
 for name in teamMemberNames
 {
@@ -266,10 +268,12 @@ addTwoOptionalValues( a, y: nil )
 
 print( "\n***** switch *****" )
 
-// no need for break
-// switch statements must be exhaustive
+// switch statement can match on numbers and strings.
+// no need for break.
+// switch statements must be exhaustive.
 var preset: String = AVAssetExportPreset1920x1080
 var height: Int
+
 switch preset
 {
 case AVAssetExportPreset1920x1080:
@@ -302,7 +306,7 @@ default:
 print( "preset height: \(height)" )
 
 
-// values in a switch can also match on logic statements intervals.
+// values in a switch can also match on logic statements & intervals.
 switch height
 {
 case let h where h >= 1080:

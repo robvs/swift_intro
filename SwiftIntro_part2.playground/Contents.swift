@@ -23,7 +23,6 @@ enum VideoPresetSimple: Int
     case _1080p, _720p, _480p
 }
 
-
 let simplePreset = VideoPresetSimple._1080p
 print( "enum value \(simplePreset), raw value \(simplePreset.rawValue)" )
 
@@ -56,6 +55,10 @@ enum VideoPreset: Int
     }
 }
 
+let preset = VideoPreset._1080p
+print( "preset height: \(preset.height)")
+print( "preset is high-def: \(preset.isHighDef())")
+
 
 // enums support extensions.
 // here, we're adding a new calculated property to the VideoPreset enum.
@@ -73,22 +76,25 @@ extension VideoPreset {
     }
 }
 
-let preset = VideoPreset._1080p
-print( "preset height: \(preset.height)")
 print( "preset av preset: \(preset.avAssetPreset)")
-print( "preset is high-def: \(preset.isHighDef())")
 
 
 // enums support initializers for defining a default value.
 extension VideoPreset {
     init()
     {
-        self = ._1080p
+        self = ._720p
     }
 }
 
 let defaultPreset = VideoPreset()
 print( "defult preset: \(defaultPreset)" )
+
+
+// at this point our enum is starting to look a lot like a class, which
+// is a good thing. with swift there's can be many situations where an
+// enum or struct can be used instead of a class. i'll leave determining
+// when it's better to not use a class up to the reader.
 
 
 // cases in enums are value types themselves and each one can be any type
@@ -103,6 +109,7 @@ let gridPoint:    Coordinate = Coordinate.Grid(5.0, 5.0)
 let pointInSpace: Coordinate = Coordinate.Space(3.0, 2.0, 4.0)
 
 
+// this shows the syntax used for switching on an enum like this.
 switch gridPoint
 {
 case .Grid( let x, let y ):
