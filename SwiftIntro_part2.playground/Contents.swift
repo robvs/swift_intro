@@ -1,3 +1,4 @@
+import AVFoundation
 import UIKit
 
 /*******************************************************************************
@@ -17,51 +18,77 @@ print( "\n***** enumerations *****" )
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html#//apple_ref/doc/uid/TP40014097-CH12-ID145
 
 // raw value types can be numeric, character or string.
-enum SimpleEnum: Int
+enum VideoPresetSimple: Int
 {
-    case value1, value2, value3
+    case _1080p, _720p, _480p
 }
 
 
-let simpleEnumValue = SimpleEnum.value1
-print( "enum value \(simpleEnumValue), raw value \(simpleEnumValue.rawValue)" )
+let simplePreset = VideoPresetSimple._1080p
+print( "enum value \(simplePreset), raw value \(simplePreset.rawValue)" )
 
 
 // enums include support for computed properties and instance methods.
-enum ClubStatus: Int
+// notice how this helps reduce the need for related helper functions.
+enum VideoPreset: Int
 {
-    case notEnrolled = 1
-    case enrolled = 2
-    case newTermsOptional = 3
-    case newTermsRequired = 4
-    case inactive = 5
-    case declined = 6
-
-    var label: String {
+    case _1080p = 1
+    case _720p  = 2
+    case _480p  = 3
+    
+    var height: Int {
+        // notice that since we're already in the enum's context, shortend dot syntax
+        // can be used (the VideoPreset prefix is not needed).
         switch self
         {
-        case .notEnrolled:
-            return "Not Enrolled"
-        case .enrolled:
-            return "Enrolled"
-            // etc.
-        default:
-            return String( self.rawValue )
+        case ._1080p:
+            return 1080
+        case ._720p:
+            return 720
+        case ._480p:
+            return 480
         }
     }
-
-    func isActive() -> Bool
+    
+    func isHighDef() -> Bool
     {
-        return self == .enrolled ||
-               self == .newTermsOptional ||
-               self == .newTermsRequired
+        return self.height >= 720
     }
 }
 
 
-let status = ClubStatus.enrolled
-print( "status raw value: \(status.rawValue), label: \(status.label)" )
-print( "active: \(status.isActive())" )
+// enums support extensions.
+// here, we're adding a new calculated property to the VideoPreset enum.
+extension VideoPreset {
+    var avAssetPreset: String {
+        switch self
+        {
+        case ._1080p:
+            return AVAssetExportPreset1920x1080
+        case ._720p:
+            return AVAssetExportPreset1280x720
+        case ._480p:
+            return AVAssetExportPreset640x480
+        }
+    }
+}
+
+let preset = VideoPreset._1080p
+print( "preset height: \(preset.height)")
+print( "preset av preset: \(preset.avAssetPreset)")
+print( "preset is high-def: \(preset.isHighDef())")
+
+
+// enums support initializers for defining a default value.
+extension VideoPreset {
+    init()
+    {
+        self = ._1080p
+    }
+}
+
+let defaultPreset = VideoPreset()
+print( "defult preset: \(defaultPreset)" )
 
 
 // cases in enums can have 'associated values' and each case can have different
@@ -72,7 +99,7 @@ enum Coordinate
     case space(Double, Double, Double)
 }
 
-let gridPoint: Coordinate = Coordinate.grid(5.0, 5.0)
+let gridPoint:    Coordinate = Coordinate.grid(5.0, 5.0)
 let pointInSpace: Coordinate = Coordinate.space(3.0, 2.0, 4.0)
 
 
