@@ -153,7 +153,14 @@ for i in 0...4
 // there's also syntax for half-open range if you don't want to include the
 // final value
 let simpleArray = ["zero", "one", "two"]
+//for index in simpleArray.indices
 for index in 0..<simpleArray.count
+{
+    print( "simpleArray item at index \(index): \(simpleArray[index])" )
+}
+
+// another way to write this
+for index in simpleArray.indices
 {
     print( "simpleArray item at index \(index): \(simpleArray[index])" )
 }
@@ -165,6 +172,13 @@ let teamMemberNames = ["matt", "mitch", "kraig", "Jim"]
 for name in teamMemberNames
 {
     print( "Team member: \(name)" )
+}
+
+// for times that you need both index and sequence element, the
+// enumerate function provides a tuple of index and element.
+for ( index, name ) in teamMemberNames.enumerated() {
+    print( index )
+    print( name )
 }
 
 
@@ -259,11 +273,8 @@ func addTwoOptionalValues( x: Int?, y: Int? ) -> Void
         print( "An 'x' value is required" )
         return
     }
-    guard let y = y else {
-        print( "A 'y' value is required" )
-        return
-    }
-
+    let y = y ?? 4
+    
     // at this point, x and y are unwrapped and we know that all have
     // valid values
 
@@ -274,6 +285,7 @@ func addTwoOptionalValues( x: Int?, y: Int? ) -> Void
 // test it...
 addTwoOptionalValues( x: a, y: b )
 addTwoOptionalValues( x: a, y: nil )
+addTwoOptionalValues( x: nil, y: nil )
 
 
 print( "\n***** switch *****" )

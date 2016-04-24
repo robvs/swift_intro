@@ -112,10 +112,11 @@ let pointInSpace: Coordinate = Coordinate.space(3.0, 2.0, 4.0)
 // this shows the syntax used for switching on an enum that uses associated values.
 switch gridPoint
 {
-case .grid( let x, let y ):
+// this is a short-hand way of writing: case .grid( let x, let y ):
+case let .grid( x, y ):
     print( "2D coordinate: \(x), \(y)" )
 
-case .space( let x, let y, let z ):
+case let .space( x, y, z ):
     print( "3D coordinate: \(x), \(y), \(z)" )
 }
 
