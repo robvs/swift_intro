@@ -112,10 +112,11 @@ let pointInSpace: Coordinate = Coordinate.Space(3.0, 2.0, 4.0)
 // this shows the syntax used for switching on an enum like this.
 switch gridPoint
 {
-case .Grid( let x, let y ):
+// this is a short-hand way of writing: case .Grid( let x, let y ):
+case let .Grid( x, y ):
     print( "2D coordinate: \(x), \(y)" )
 
-case .Space( let x, let y, let z ):
+case let .Space( x, y, z ):
     print( "3D coordinate: \(x), \(y), \(z)" )
 }
 
