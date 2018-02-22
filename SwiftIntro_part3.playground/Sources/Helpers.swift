@@ -4,18 +4,14 @@ import Foundation
 /**
  Get the user id from a url path.
  */
-public func userIdFromUrl( url: NSURL ) -> String?
+public func getUserId( from url: URL ) -> String?
 {
-    if let urlPath = url.path
-    {
-        let substringStart = urlPath.startIndex.advancedBy(6)
-        let userId = urlPath.substringFromIndex(substringStart)
-        return userId
-    }
-    else
-    {
+    let urlElements = url.path.split(separator: "/")
+    guard let userIdSubstring = urlElements.last else {
         return nil
     }
+    
+    return String(userIdSubstring)
 }
 
 
@@ -28,11 +24,11 @@ public func simpleDataTaskWithRequest(
     completionHandler: ([String : AnyObject]?) -> Void )
 {
     // quick and dirty unwrapping
-    let userId = userIdFromUrl( request.URL! )
+    let userId = getUserId( from: request.url! )
     
-    if userId == "1234"
+    if let userId = userId, userId == "1234"
     {
-        let response = ["firstName": "Real", "lastName": "Service Request"]
+        let response = ["firstName": "Real", "lastName": "Service Request"] as [String : AnyObject]
         completionHandler( response )
     }
     else

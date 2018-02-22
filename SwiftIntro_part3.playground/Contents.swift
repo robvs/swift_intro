@@ -15,20 +15,20 @@ print( "***** classes - a simple json web service example *****" )
 */
 class SimpleJsonService
 {
-	// Perform a Get on a specified url.
+    // Perform a Get on a specified url.
     // Notice that completion is a closure with two params - response and error.
-    func Get( url: NSURL,
-              completion: (response: [String : AnyObject]?, error: NSError?) -> Void )
+    func Get( url: URL,
+              completion: (_ response: [String : AnyObject]?, _ error: NSError?) -> Void )
     {
-        let request = NSMutableURLRequest( URL: url )
-        
+        let request = NSMutableURLRequest( url: url )
+
         // simpleDataTaskWithRequest is a helper function used to simulate a
         // web service call.
-        simpleDataTaskWithRequest(request) { (response) -> Void in
+        simpleDataTaskWithRequest(request: request) { (response) -> Void in
             if let response = response
             {
                 // success
-                completion( response: response, error: nil )
+                completion( response, nil )
             }
             else
             {
@@ -37,16 +37,16 @@ class SimpleJsonService
                 let responseError = NSError( domain: "JSONService",
                                              code: 9,
                                              userInfo: userInfo )
-                completion( response: nil, error: responseError )
+                completion( nil, responseError )
             }
         }
     }
 }
 
 /**
- Define a class that would be used w/in the app to retrive user 
+ Define a class that would be used w/in the app to retrive user
  profile information.
- 
+
  Sample JSON response for a user profile call:
  {
      "firstName":"Amy","lastName":"Pond"
@@ -55,45 +55,45 @@ class SimpleJsonService
 class SimpleUserProfileService
 {
     let jsonService: SimpleJsonService
-    
+
     init()
     {
         self.jsonService = SimpleJsonService()
     }
-    
+
     // use the json service instance to retrieve the user's full name
     func getFullNameForUserId(
-        	userId: String,
-        	completion: (name: (first: String, last: String)?, error: NSError?) -> Void )
+            userId: String,
+            completion: (_ name: (first: String, last: String)?, _ error: NSError?) -> Void )
     {
-        let url = NSURL( string: "http://api.sample.com/user/\(userId)" )!
-        
-        jsonService.Get( url ) { (response, error) -> Void in
+        let url = URL( string: "http://api.sample.com/user/\(userId)" )!
+
+        jsonService.Get( url: url ) { (response, error) -> Void in
             // use guard to unwrap response and return early if there
-            // was an error. use swift's support for "shadowing" to 
+            // was an error. use swift's support for "shadowing" to
             // reuse 'response'
             guard let response = response else {
-                print( "There was an error: \(error)" )
+                print( "There was an error: \(error?.localizedDescription ?? "unknown")" )
                 return
             }
-            
-            // the response is looking good, let's grab the data that 
+
+            // the response is looking good, let's grab the data that
             // we're after. response is a dict that looks like this:
             //   ["firstName": "Amy", "LastName": "Pond"]
             let firstName = response["firstName"] as? String
             let lastName  = response["lastName"]  as? String
-            
+
             if firstName != nil && lastName != nil
             {
-                completion( name: (firstName!, lastName!), error: nil )
+                completion( (firstName!, lastName!), nil )
             }
             else
             {
                 // bad data
                 let dataError = NSError( domain: "MPerksService", code: 9, userInfo: nil )
-                completion( name: nil, error: dataError )
+                completion( nil, dataError )
             }
-    	}
+        }
     }
 }
 
@@ -104,12 +104,12 @@ print( "***** Calling the user profile service *****" )
 */
 let simpleUserProfileService = SimpleUserProfileService()
 
-simpleUserProfileService.getFullNameForUserId( "1234" ) { (name, error) -> Void in
+simpleUserProfileService.getFullNameForUserId( userId: "1234" ) { (name, error) -> Void in
     guard let name = name else {
-        print( "There was an error: \(error)" )
+        print( "There was an error: \(error?.localizedDescription ?? "unknown")" )
         return
     }
-    
+
     print( "Name is \(name.first) \(name.last)" )
 }
 
@@ -122,15 +122,15 @@ func handleUserProfileServiceResponse( name: (first: String, last: String)?,
                                        error: NSError? )
 {
     guard let name = name else {
-        print( "There was an error: \(error)" )
+        print( "There was an error: \(error?.localizedDescription ?? "unknown")" )
         return
     }
-    
+
     print( "Name is \(name.first) \(name.last)" )
 }
 
 simpleUserProfileService.getFullNameForUserId(
-    "1234",
+    userId: "1234",
     completion: handleUserProfileServiceResponse )
 
 
@@ -138,7 +138,7 @@ simpleUserProfileService.getFullNameForUserId(
 
 // try a different user id
 simpleUserProfileService.getFullNameForUserId(
-    "4321",
+    userId: "4321",
     completion: handleUserProfileServiceResponse )
 
 // try some more user ids...
@@ -149,7 +149,7 @@ simpleUserProfileService.getFullNameForUserId(
 // tests. it would be much better to mock or fake the json service
 // responses so that we can focus on just the code that we've written.
 
-// one way to solve this problem is through protocols and 
+// one way to solve this problem is through protocols and
 // dependency injection.
 
 
@@ -164,29 +164,29 @@ print( "\n***** Protocols and dependency injection *****" )
  */
 protocol JsonServiceProtocol
 {
-    func Get( url: NSURL,
-              completion: (response: [String: AnyObject]?, error: NSError?) -> Void )
+    func Get( url: URL,
+              completion: (_ response: [String: AnyObject]?, _ error: NSError?) -> Void )
 }
 
 class JsonService: JsonServiceProtocol
 {
-    func Get( url: NSURL,
-              completion: (response: [String : AnyObject]?, error: NSError?) -> Void)
+    func Get( url: URL,
+              completion: (_ response: [String : AnyObject]?, _ error: NSError?) -> Void)
     {
-        let request = NSMutableURLRequest(URL: url)
-        
+        let request = NSMutableURLRequest(url: url)
+
         // using the same helper function used to simulate a web service call.
-        simpleDataTaskWithRequest(request) { (serviceResponse) -> Void in
+        simpleDataTaskWithRequest(request: request) { (serviceResponse) -> Void in
             if let goodResponse = serviceResponse
             {
                 // success
-                completion( response: goodResponse, error: nil )
+                completion( goodResponse, nil )
             }
             else
             {
                 // failure
                 let responseError = NSError(domain: "MPerksService", code: 9, userInfo: nil)
-                completion( response: nil, error: responseError )
+                completion( nil, responseError )
             }
         }
     }
@@ -198,37 +198,37 @@ class JsonService: JsonServiceProtocol
 class UserProfileService
 {
     let jsonService: JsonServiceProtocol
-    
+
     init( jsonService: JsonServiceProtocol )
     {
         self.jsonService = jsonService
     }
-    
+
     // use the json service instance to retrieve the user's full name
     func getFullNameForUserId(
-        	userId: String,
-        	completion: (name: (first: String, last: String)?, error: NSError?) -> Void )
+            userId: String,
+            completion: (_ name: (first: String, last: String)?, _ error: NSError?) -> Void )
     {
-        let url = NSURL( string: "http://api.sample.com/user/\(userId)" )!
-        
-        jsonService.Get( url ) { (response, error) -> Void in
+        let url = URL( string: "http://api.sample.com/user/\(userId)" )!
+
+        jsonService.Get( url: url ) { (response, error) -> Void in
             guard let response = response else {
-                print( "There was an error: \(error)" )
+                print( "There was an error: \(error?.localizedDescription ?? "unknown")" )
                 return
             }
-            
+
             let firstName = response["firstName"] as? String
             let lastName = response["lastName"] as? String
-            
+
             if firstName != nil && lastName != nil
             {
-                completion( name: (firstName!, lastName!), error: nil )
+                completion( (firstName!, lastName!), nil )
             }
             else
             {
                 // bad data
                 let dataError = NSError( domain: "MPerksService", code: 9, userInfo: nil )
-                completion( name: nil, error: dataError )
+                completion( nil, dataError )
             }
         }
     }
@@ -238,12 +238,16 @@ class UserProfileService
 // service instance.
 class FakeJsonService: JsonServiceProtocol
 {
-    func Get(url: NSURL, completion: (response: [String : AnyObject]?, error: NSError?) -> Void)
+    func Get(url: URL, completion: (_ response: [String : AnyObject]?, _ error: NSError?) -> Void)
     {
-        var serviceResponse = [String: String]()
-        let userId = userIdFromUrl( url )
+        guard let userId = getUserId(from: url) else {
+            completion( nil, nil )
+            return
+        }
         
-        switch userId!
+        var serviceResponse = [String: String]()
+
+        switch userId
         {
         case "1234":
             serviceResponse = ["firstName": "Rose", "lastName": "Tyler"]
@@ -252,22 +256,22 @@ class FakeJsonService: JsonServiceProtocol
         default:
             serviceResponse = ["firstName": "not", "lastName": "found"]
         }
-        
-        completion( response: serviceResponse, error: nil )
+
+        completion( serviceResponse as [String : AnyObject], nil )
     }
 }
 
 print( "\n-- test UserProfileService using fake json service --" )
 var userProfileService = UserProfileService( jsonService: FakeJsonService() )
 
-userProfileService.getFullNameForUserId( "1234",
+userProfileService.getFullNameForUserId( userId: "1234",
                                          completion: handleUserProfileServiceResponse )
 
-userProfileService.getFullNameForUserId( "4321",
-    									 completion: handleUserProfileServiceResponse )
+userProfileService.getFullNameForUserId( userId: "4321",
+                                         completion: handleUserProfileServiceResponse )
 
-userProfileService.getFullNameForUserId( "asdf",
-    									 completion: handleUserProfileServiceResponse )
+userProfileService.getFullNameForUserId( userId: "asdf",
+                                         completion: handleUserProfileServiceResponse )
 
 
 print( "\n***** Protocol Extensions *****" )
@@ -275,26 +279,26 @@ print( "\n***** Protocol Extensions *****" )
 /**
  Create an extension that adds a Get() overload that includes
  a timeout parameter.
- 
+
  Protocol Extensions can be especially useful for extending types
  who's implementation you don't own.
 */
 extension JsonServiceProtocol
 {
     // Overload Get() by adding a timeout param.
-    func Get( url: NSURL,
-              timeout: NSTimeInterval,
-              completion: (response: [String : AnyObject]?, error: NSError?) -> Void )
+    func Get( url: URL,
+              timeout: TimeInterval,
+              completion: (_ response: [String : AnyObject]?, _ error: NSError?) -> Void )
     {
-        let request = NSMutableURLRequest( URL: url,
-                                           cachePolicy: .UseProtocolCachePolicy,
+        let request = NSMutableURLRequest( url: url,
+                                           cachePolicy: .useProtocolCachePolicy,
                                            timeoutInterval: timeout )
-        
-        simpleDataTaskWithRequest(request) { (response) -> Void in
+
+        simpleDataTaskWithRequest(request: request) { (response) -> Void in
             if let response = response
             {
                 // success
-                completion( response: response, error: nil )
+                completion( response, nil )
             }
             else
             {
@@ -303,7 +307,7 @@ extension JsonServiceProtocol
                 let responseError = NSError( domain: "JSONService",
                     code: 9,
                     userInfo: userInfo )
-                completion( response: nil, error: responseError )
+                completion( nil, responseError )
             }
         }
     }
@@ -315,28 +319,28 @@ extension UserProfileService
 {
     func getFullNameForUserId(
             userId: String,
-            timeout: NSTimeInterval,
-            completion: (name: (first: String, last: String)?, error: NSError?) -> Void )
+            timeout: TimeInterval,
+            completion: (_ name: (first: String, last: String)?, _ error: NSError?) -> Void )
     {
-        let url = NSURL( string: "http://api.sample.com/user/\(userId)" )!
-        
-        jsonService.Get( url, timeout: 1.0 ) { (response, error) -> Void in
+        let url = URL( string: "http://api.sample.com/user/\(userId)" )!
+
+        jsonService.Get( url: url, timeout: 1.0 ) { (response, error) -> Void in
             guard let response = response else {
-                print( "There was an error: \(error)" )
+                print( "There was an error: \(error?.localizedDescription ?? "unknown")" )
                 return
             }
-            
+
             let firstName = response["firstName"] as? String
             let lastName = response["lastName"] as? String
             if firstName != nil && lastName != nil
             {
-                completion( name: (firstName!, lastName!), error: nil )
+                completion( (firstName!, lastName!), nil )
             }
             else
             {
                 // bad data
                 let dataError = NSError( domain: "MPerksService", code: 9, userInfo: nil )
-                completion( name: nil, error: dataError )
+                completion( nil, dataError )
             }
         }
     }
@@ -345,9 +349,12 @@ extension UserProfileService
 // call the new "extended" function.
 var userProfileServiceExt = UserProfileService( jsonService: JsonService() )
 
-userProfileServiceExt.getFullNameForUserId( "1234",
+let url = URL( string: "http://api.sample.com/user/1234" )!
+let userId = getUserId(from: url)
+userProfileServiceExt.getFullNameForUserId( userId: "1234",
                                             timeout: 1.0,
                                             completion: handleUserProfileServiceResponse )
 
 
 // End of part 3 of 3
+
