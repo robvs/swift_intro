@@ -1,3 +1,4 @@
+import AVFoundation
 import UIKit
 
 /*******************************************************************************
@@ -17,71 +18,105 @@ print( "\n***** enumerations *****" )
 // https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Enumerations.html#//apple_ref/doc/uid/TP40014097-CH12-ID145
 
 // raw value types can be numeric, character or string.
-enum SimpleEnum: Int
+enum VideoPresetSimple: Int
 {
-    case Value1, Value2, Value3
+    case _1080p, _720p, _480p
 }
 
-
-let simpleEnumValue = SimpleEnum.Value1
-print( "enum value \(simpleEnumValue), raw value \(simpleEnumValue.rawValue)" )
+let simplePreset = VideoPresetSimple._1080p
+print( "enum value \(simplePreset), raw value \(simplePreset.rawValue)" )
 
 
 // enums include support for computed properties and instance methods.
-enum ClubStatus: Int
+// notice how this helps reduce the need for related helper functions.
+enum VideoPreset: Int
 {
-    case NotEnrolled = 1
-    case Enrolled = 2
-    case NewTermsOptional = 3
-    case NewTermsRequired = 4
-    case Inactive = 5
-    case Declined = 6
+    case _1080p = 1
+    case _720p  = 2
+    case _480p  = 3
     
-    var label: String {
+    var height: Int {
+        // notice that since we're already in the enum's context, shortend dot syntax
+        // can be used (the VideoPreset prefix is not needed).
         switch self
         {
-        case .NotEnrolled:
-            return "Not Enrolled"
-        case .Enrolled:
-            return "Enrolled"
-            // etc.
-        default:
-            return String( self.rawValue )
+        case ._1080p:
+            return 1080
+        case ._720p:
+            return 720
+        case ._480p:
+            return 480
         }
     }
     
-    func isActive() -> Bool
+    func isHighDef() -> Bool
     {
-        return self == .Enrolled ||
-               self == .NewTermsOptional ||
-               self == .NewTermsRequired
+        return self.height >= 720
     }
 }
 
+let preset = VideoPreset._1080p
+print( "preset height: \(preset.height)")
+print( "preset is high-def: \(preset.isHighDef())")
 
-let status = ClubStatus.Enrolled
-print( "status raw value: \(status.rawValue), label: \(status.label)" )
-print( "active: \(status.isActive())" )
 
-
-// cases in enums are value types themselves and each one can be any type
-// that you want - similar to unions and variants in other languages.
-enum Coordinate
-{
-    case Grid(Double, Double)
-    case Space(Double, Double, Double)
+// enums support extensions.
+// here, we're adding a new calculated property to the VideoPreset enum.
+extension VideoPreset {
+    var avAssetPreset: String {
+        switch self
+        {
+        case ._1080p:
+            return AVAssetExportPreset1920x1080
+        case ._720p:
+            return AVAssetExportPreset1280x720
+        case ._480p:
+            return AVAssetExportPreset640x480
+        }
+    }
 }
 
-let gridPoint: Coordinate = Coordinate.Grid(5.0, 5.0)
-let pointInSpace: Coordinate = Coordinate.Space(3.0, 2.0, 4.0)
+print( "preset av preset: \(preset.avAssetPreset)")
 
 
+// enums support initializers for defining a default value.
+extension VideoPreset {
+    init()
+    {
+        self = ._720p
+    }
+}
+
+let defaultPreset = VideoPreset()
+print( "defult preset: \(defaultPreset)" )
+
+
+// at this point our enum is starting to look a lot like a class, which
+// is a good thing. with swift there can be many situations where an
+// enum or struct can be used instead of a class. i'll leave determining
+// when it's better to not use a class up to the reader.
+
+
+// cases in enums can have 'associated values' and each case can have different
+// associated types - similar to unions and variants in other languages.
+enum Coordinate
+{
+    case grid(Double, Double)
+    case space(Double, Double, Double)
+}
+
+let gridPoint:    Coordinate = Coordinate.grid(5.0, 5.0)
+let pointInSpace: Coordinate = Coordinate.space(3.0, 2.0, 4.0)
+
+
+// this shows the syntax used for switching on an enum that uses associated values.
 switch gridPoint
 {
-case .Grid( let x, let y ):
+// this is a short-hand way of writing: case .grid( let x, let y ):
+case let .grid( x, y ):
     print( "2D coordinate: \(x), \(y)" )
 
-case .Space( let x, let y, let z ):
+case let .space( x, y, z ):
     print( "3D coordinate: \(x), \(y), \(z)" )
 }
 
@@ -94,30 +129,40 @@ print( "\n***** closures *****" )
 // parameter in asyncronous functions.
 //
 // notice the syntax is very similar to defining a function.
-func getFullNameForUserId( userId: String,
-                           completion: (first: String, last: String) -> Void )
+func getFullName( for userId: String,
+                  completion: (_ first: String, _ last: String) -> Void )
 {
-    // executing the completion closure is exactly like calling a function
-    completion( first: "Amy", last: "Pond" )
+    // executing the completion closure is exactly like calling a function,
+    // but without named parameters.
+    completion( "Amy", "Pond" )
 }
 
+// supplying a closure as a method prameter looks like this...
+// notice that the closure parameter types are inferred here because
+// the compiler knows the `completion` parameter's type.
 
-// if a closure is the last parameter of a function, it can be
+getFullName( for: "1234", completion: { (firstName, lastName) -> Void in
+    print( "Full name is \(firstName) \(lastName)" )
+})
+
+// or if a closure is the last parameter of a function, it can be
 // written as a 'trailing closure' where it is written outside
 // of the function's closing parentheses.
-getFullNameForUserId( "1234" ) { (firstName, lastName) -> Void in
-    
+getFullName( for: "1234" ) { (firstName, lastName) -> Void in
+
     print( "Full name is \(firstName) \(lastName)" )
 }
 
 
-// it is often less confusing to define the closure before calling the function
+// it is often less confusing to define the closure before calling the function.
+// notice that the closure parameter types are not inferred here because the
+// compiler does not know the type of `fullNameHandler`
 let fullNameHandler = { (firstName: String, lastName: String) -> Void in
     
     print( "Full name is \(firstName) \(lastName) [closure assigned to a constant]" )
 }
 
-getFullNameForUserId( "1234", completion: fullNameHandler )
+getFullName( for: "1234", completion: fullNameHandler )
 
 
 print( "\n***** classes & structures *****" )
@@ -129,15 +174,15 @@ class Person
     // properties
     var firstName: String
     var lastName: String
-    
+
     // initializers
     init( firstName: String, lastName: String)
     {
         self.firstName = firstName
         self.lastName = lastName
     }
-    
-    // instance methods go here
+
+    // instance methods go here...
 }
 
 var person = Person( firstName: "Rose", lastName: "Tylor" )
@@ -145,15 +190,15 @@ print( "Person frist name is \(person.firstName)" )
 
 
 // Swift structs can do much of what classes can do including
-// encapsulation of properties and methods as well as implement 
-// protocols. but structs do not allow inheritance and are 
+// encapsulation of properties and methods as well as implement
+// protocols. but structs do not allow inheritance and are
 // passed by value, not reference.
 struct User
 {
     // properties
     var firstName: String
     var lastName: String
-    
+
     // functions
     func fullName() -> String
     {
