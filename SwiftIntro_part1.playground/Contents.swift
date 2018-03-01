@@ -84,7 +84,7 @@ let pie = "apple pie"
 let pi_ = 3.14159
 
 
-// string formatting - use \()
+// string formatting - use "\()"
 print( "A circle w/dia of \(diameter) has a circ of \(circumference)" )
 print( "\(🐶🐮) says 'moof'")
 
@@ -93,7 +93,7 @@ print( "\n***** functions *****" )
 
 // parameters must be named. return type syntax is a bit different.
 // an argument label (i.e. `withFirstName` can be specified to help
-// with readability when calling it.
+// with readability when calling it.)
 func getGreeting( withFirstName firstName: String, lastName: String ) -> String
 {
     return "Hello \(firstName) \(lastName)"
@@ -168,7 +168,7 @@ for index in simpleArray.indices
 
 // as with most modern languages, swift allows you to iterate over the
 // values in a collection.
-let teamMemberNames = ["matt", "mitch", "kraig", "Jim"]
+let teamMemberNames = ["matt", "mitch", "kraig", "Josh"]
 for name in teamMemberNames
 {
     print( "Team member: \(name)" )
@@ -177,8 +177,7 @@ for name in teamMemberNames
 // for times that you need both index and sequence element, the
 // enumerate function provides a tuple of index and element.
 for ( index, name ) in teamMemberNames.enumerated() {
-    print( index )
-    print( name )
+    print( "\(index + 1). \(name)" )
 }
 
 
@@ -189,7 +188,7 @@ for ( index, name ) in teamMemberNames.enumerated() {
 //}
 
 // i++ and ++i is deprecated
-// this for loop syntax is deprecated as of Swift 2.2
+// the for loop syntax is deprecated as of Swift 2.2
 // here is the proposal that inspired this:
 //   https://github.com/apple/swift-evolution/blob/master/proposals/0007-remove-c-style-for-loops.md
 
@@ -265,8 +264,8 @@ print( "\n***** using guard to bail early *****" )
 Also see "When (not) to use guard" - http://radex.io/swift/guard/
 */
 
-// guards can be handy in functions with optional parameters and you want
-// do ealy error checking.
+// guards can be handy in functions with optional parameters and you
+// want to do ealy error checking.
 func addTwoOptionalValues( x: Int?, y: Int? ) -> Void
 {
     guard let x = x else {
